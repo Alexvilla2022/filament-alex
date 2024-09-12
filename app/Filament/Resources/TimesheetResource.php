@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TimesheetResource\Pages;
-use App\Filament\Resources\TimesheetResource\RelationManagers;
 use App\Models\Timesheet;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables;
 
 class TimesheetResource extends Resource
 {
@@ -23,18 +20,17 @@ class TimesheetResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('calendar_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('calendar_id')
+                    ->relationship('calendar', 'name') // Cambiado a Select
+                    ->required(),
+                Forms\Components\Select::make('user_id')
+                    ->relationship('user', 'name') // Cambiado a Select
+                    ->required(),
                 Forms\Components\Select::make('type')
-                ->options([
-                    'draft'=>'Draft',
-                    'reviewing'=>'Reviewing',
-                    'published'=>'Published',
-                ])
+                    ->options([
+                        'work' => 'working',
+                        'pause' => 'in pause',
+                    ])
                     ->required(),
                 Forms\Components\DateTimePicker::make('day_in')
                     ->required(),
@@ -47,11 +43,9 @@ class TimesheetResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('calendar_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('calendar.name') // Mostrar el nombre del calendario
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('user.name') // Mostrar el nombre del usuario
                     ->sortable(),
                 Tables\Columns\TextColumn::make('type'),
                 Tables\Columns\TextColumn::make('day_in')
@@ -69,9 +63,7 @@ class TimesheetResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
@@ -84,9 +76,7 @@ class TimesheetResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

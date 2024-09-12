@@ -61,15 +61,11 @@ class User extends Authenticatable
     }
 
     public function holidays(){
-        return $this->hasMany(Departament::class);
+        return $this->hasMany(Holiday::class);
     }
 
     public function timesheets(){
         return $this->hasMany(Timesheet::class);
     }
 
-    public function countries()
-    {
-        return $this->belongsToMany(Country::class);
-    }
 }
