@@ -9,6 +9,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+
 
 class TimesheetResource extends Resource
 {
@@ -22,9 +25,11 @@ class TimesheetResource extends Resource
             ->schema([
                 Forms\Components\Select::make('calendar_id')
                     ->relationship('calendar', 'name') // Cambiado a Select
+                    ->searchable()
                     ->required(),
                 Forms\Components\Select::make('user_id')
                     ->relationship('user', 'name') // Cambiado a Select
+                    ->searchable()
                     ->required(),
                 Forms\Components\Select::make('type')
                     ->options([
@@ -33,8 +38,10 @@ class TimesheetResource extends Resource
                     ])
                     ->required(),
                 Forms\Components\DateTimePicker::make('day_in')
+                ->searchable()
                     ->required(),
                 Forms\Components\DateTimePicker::make('day_out')
+                ->searchable()
                     ->required(),
             ]);
     }
@@ -44,28 +51,42 @@ class TimesheetResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('calendar.name') // Mostrar el nombre del calendario
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('user.name') // Mostrar el nombre del usuario
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('type'),
                 Tables\Columns\TextColumn::make('day_in')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('day_out')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
+                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
+                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([])
+            ->filters([
+                SelectFilter::make('type')
+    ->options([
+        'work' => 'working',
+        'pause' => 'in pause',
+    ]),
+        Filter::make('day_in')
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
