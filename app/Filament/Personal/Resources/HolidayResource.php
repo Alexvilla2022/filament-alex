@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Personal\Resources;
 
-use App\Filament\Resources\DepartamentResource\Pages;
-use App\Filament\Resources\DepartamentResource\RelationManagers;
-use App\Models\Departament;
+use App\Filament\Personal\Resources\HolidayResource\Pages;
+use App\Filament\Personal\Resources\HolidayResource\RelationManagers;
+use App\Models\Holiday;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,11 +13,10 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class DepartamentResource extends Resource
+class HolidayResource extends Resource
 {
-    protected static ?string $model = Departament::class;
-    protected static ?string $navigationGroup = 'Control del sistema';
-    protected static ?string $navigationLabel = 'Departamentos';
+    protected static ?string $model = Holiday::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
@@ -25,7 +24,6 @@ class DepartamentResource extends Resource
         return $form
             ->schema([
                 //
-                Forms\Components\TextInput::make('name')->required(),
             ]);
     }
 
@@ -34,8 +32,6 @@ class DepartamentResource extends Resource
         return $table
             ->columns([
                 //
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
             ])
             ->filters([
                 //
@@ -60,9 +56,9 @@ class DepartamentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDepartaments::route('/'),
-            'create' => Pages\CreateDepartament::route('/create'),
-            'edit' => Pages\EditDepartament::route('/{record}/edit'),
+            'index' => Pages\ListHolidays::route('/'),
+            'create' => Pages\CreateHoliday::route('/create'),
+            'edit' => Pages\EditHoliday::route('/{record}/edit'),
         ];
     }
 }

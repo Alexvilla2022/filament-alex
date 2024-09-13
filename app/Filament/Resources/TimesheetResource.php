@@ -16,7 +16,8 @@ use Filament\Tables\Filters\SelectFilter;
 class TimesheetResource extends Resource
 {
     protected static ?string $model = Timesheet::class;
-
+    protected static ?string $navigationGroup = 'Control de empleados';
+    protected static ?string $navigationLabel = 'Hoja de tiempo';
     protected static ?string $navigationIcon = 'heroicon-o-clock';
 
     public static function form(Form $form): Form
@@ -24,12 +25,10 @@ class TimesheetResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('calendar_id')
-                    ->relationship('calendar', 'name') // Cambiado a Select
-                    ->searchable()
+                    ->relationship('calendar', 'name') // Cambiado a Select  
                     ->required(),
                 Forms\Components\Select::make('user_id')
                     ->relationship('user', 'name') // Cambiado a Select
-                    ->searchable()
                     ->required(),
                 Forms\Components\Select::make('type')
                     ->options([
@@ -38,10 +37,8 @@ class TimesheetResource extends Resource
                     ])
                     ->required(),
                 Forms\Components\DateTimePicker::make('day_in')
-                ->searchable()
                     ->required(),
                 Forms\Components\DateTimePicker::make('day_out')
-                ->searchable()
                     ->required(),
             ]);
     }
